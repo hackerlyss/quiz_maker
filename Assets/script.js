@@ -6,9 +6,11 @@ const questionEl = document.getElementById('question');
 const answerButtonsEl = document.getElementById('answer-buttons');
 const quizTimer = document.getElementById('quiz-timer')
 const userScore = 0;
+var secondsLeft = 60;
 
 startButton.addEventListener('click', () => {
     startGame()
+    setTime()
 })
 nextButton.addEventListener('click', () => {
     currentQ++
@@ -85,12 +87,22 @@ var questions = [
         ]
     },
 ]
-
-function addScore (element,correct) {
-    if (correct) {
-        userScore++;
-    }
-}
+function setTime() {
+    // Sets interval in variable
+    var timerInterval = setInterval(function() {
+      secondsLeft--;
+      quizTimer.textContent = secondsLeft + " seconds left.";
+  
+      if(secondsLeft === 0) {
+        // Stops execution of action at set interval
+        clearInterval(timerInterval);
+        // Calls function to create and append image
+        startButton.innerText = 'Restart';
+        startButton.classList.remove('hide')
+      }
+  
+    }, 6000);
+  }
 
 function startGame() {
   startButton.classList.add('hide');
@@ -114,7 +126,9 @@ function showQuestion(question) {
       button.classList.add('btn');
       if (answer.correct) {
           button.dataset.correct = answer.correct;
-      }  
+      }  else {
+          secondsLeft-10;
+      }
       button.addEventListener('click', selectAnswer);
       answerButtonsEl.appendChild(button)
       })
@@ -134,7 +148,7 @@ function selectAnswer(e) {
     setStatusClass(document.body, correct)
     Array.from(answerButtonsEl.children).forEach(button => {
         setStatusClass(button,button.dataset.correct)
-        addScore()
+       
     })
     if (shuffledQ.length > currentQ +1) {
         nextButton.classList.remove('hide');
@@ -150,8 +164,10 @@ function setStatusClass(element,correct) {
     clearStatusClass(element)
     if (correct) {
         element.classList.add('correct');
+       
     } else {
-        element.classList.add('wrong')
+        element.classList.add('wrong');
+        secondsLeft-10;
     }
 }
 
