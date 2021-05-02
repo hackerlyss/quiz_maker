@@ -101,7 +101,7 @@ function setTime() {
         startButton.classList.remove('hide')
       }
   
-    }, 6000);
+    }, 1000);
   }
 
 function startGame() {
